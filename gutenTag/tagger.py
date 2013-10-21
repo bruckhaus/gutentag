@@ -77,11 +77,13 @@ class Tagger:
 
         terms = get_terms(tree)
 
+        result = ''
+
         print "\nterms:"
         for term in terms:
             for word in term:
+                result += ', ' + word
                 print word,
             print
 
-
-
+        return result[2:]
