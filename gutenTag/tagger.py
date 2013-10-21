@@ -32,22 +32,18 @@ class Tagger:
 
     @staticmethod
     def normalise(word):
-        """Normalises words to lowercase and stems and lemmatizes it."""
-        lemmatizer = nltk.WordNetLemmatizer()
-        stemmer = nltk.stem.porter.PorterStemmer()
+        """Normalises words to lowercase and lemmatizes it."""
         word = word.lower()
-        word = stemmer.stem_word(word)
+        lemmatizer = nltk.WordNetLemmatizer()
         word = lemmatizer.lemmatize(word)
         return word
 
     @staticmethod
     def acceptable_word(word):
         """Checks conditions for acceptable word: length, stopword."""
-        from nltk.corpus import stopwords
-
-        stopwords = stopwords.words('english')
-        accepted = bool(2 <= len(word) <= 40
-        and word.lower() not in stopwords)
+        stopwords = nltk.corpus.stopwords.words('english')
+        accepted = bool(2 <= len(word) <= 40 and
+                        word.lower() not in stopwords)
         return accepted
 
     @staticmethod

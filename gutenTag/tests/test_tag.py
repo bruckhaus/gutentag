@@ -10,43 +10,62 @@ class TestTagger(unittest.TestCase):
         computer or the gears of a cycle transmission as he does at the top of a mountain
         or in the petals of a flower. To think otherwise is to demean the Buddha...which is
         to demean oneself."""
-        expected = 'buddha, godhead, circuit, digit, comput, gear, cycl, transmiss, mountain, petal, flower, ' + \
-                   'buddha, demean, oneself'
+        expected = 'buddha, godhead, circuit, digital, computer, gear, cycle, transmission, mountain, petal, ' + \
+                   'flower, buddha, demean, oneself'
         assert_equals(Tagger.tag(text), expected)
 
     @staticmethod
     def test_tag_tillirix():
         text = """Marketaire.com  Founder - Internet marketing strategies & tactics. SEO, SEM, SMM. Let's do this.
         Toronto, Ontario, Canada . marketaire.com"""
-        expected = 'marketair, com, founder, internet, market, strategi, tactic, seo, sem, smm, let, toronto, ' + \
-                   'ontario, canada, marketair, com'
+        expected = 'marketaire, com, founder, internet, marketing, strategy, tactic, seo, sem, smm, let, toronto, ' + \
+                   'ontario, canada, marketaire, com'
         assert_equals(Tagger.tag(text), expected)
 
         text = """SEM SEO SMM PPC Performance Suchmaschinen Marketing sponsored listings affiliate adwords paid
         search social ROI tracking; twitterbot; follow @ressmann my human"""
-        expected = 'seo, smm, ppc, perform, suchmaschinen, market, list, adword, search, social, roi, track, ' + \
-                   'twitterbot, follow, ressmann, human'
+        expected = 'seo, smm, ppc, performance, suchmaschinen, marketing, listing, adwords, search, social, roi, ' + \
+                   'tracking, twitterbot, follow, ressmann, human'
         assert_equals(Tagger.tag(text), expected)
 
         text = """#Technology, science, self-development, organizational methods, #SM, #SMM.
         Following #business trends and developments.
         Top 1% Kred."""
-        expected = 'technolog, scienc, organiz, method, sm, smm, follow, busi, trend, develop, top, kred'
+        expected = 'technology, science, organizational, method, sm, smm, following, business, trend, ' + \
+                   'development, top, kred'
         assert_equals(Tagger.tag(text), expected)
 
     @staticmethod
     def test_tag_joshowens():
         text = """San Franciscan, yogi, rubyist, entrepreneur, @RubyRogues panelist,
         organizer of Golden Gate RubyConf"""
-        expected = 'san, franciscan, yogi, rubyist, entrepreneur, rubyrogu, organ, golden, gate, rubyconf'
+        expected = 'san, franciscan, yogi, rubyist, entrepreneur, rubyrogues, organizer, golden, gate, rubyconf'
         assert_equals(Tagger.tag(text), expected)
 
         text = """Rubyist, motorcycle racer, cheapskate.
         Developer of Sidekiq http://t.co/ngmJl4Giae
         Tech guy at @TheClymb"""
-        expected = 'rubyist, motorcycl, racer, develop, sidekiq, http, co, ngmjl4giae, tech, guy, theclymb'
+        expected = 'rubyist, motorcycle, racer, developer, sidekiq, http, co, ngmjl4giae, tech, guy, theclymb'
         assert_equals(Tagger.tag(text), expected)
 
         text = """GitHub Cofounder"""
-        expected = 'github, cofound'
+        expected = 'github, cofounder'
+        assert_equals(Tagger.tag(text), expected)
+
+    @staticmethod
+    def test_tag_follow():
+        text = """follow follows followed following follower followers"""
+        expected = 'follow, follower'
+        assert_equals(Tagger.tag(text), expected)
+
+        text = """follow follows followed following followings follower followers"""
+        expected = 'follow, following, follower'
+        assert_equals(Tagger.tag(text), expected)
+
+        text = """Follow me back!"""
+        expected = 'follow'
+        assert_equals(Tagger.tag(text), expected)
+
+        text = """I have a large following in Hungary and a small following in the USA."""
+        expected = 'hungary, usa'
         assert_equals(Tagger.tag(text), expected)
