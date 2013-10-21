@@ -2,7 +2,6 @@ import nltk
 
 
 class Tagger:
-
     def __init__(self):
         pass
 
@@ -37,12 +36,6 @@ class Tagger:
         # Used when tokenizing words
         tokens = nltk.regexp_tokenize(text, sentence_re)
         pos_tokens = nltk.tag.pos_tag(tokens)
-
-
-
-        print "\npos_tag():"
-        print pos_tokens
-
         tree = chunker.parse(pos_tokens)
 
         from nltk.corpus import stopwords
@@ -79,11 +72,8 @@ class Tagger:
 
         result = ''
 
-        print "\nterms:"
         for term in terms:
             for word in term:
                 result += ', ' + word
-                print word,
-            print
 
         return result[2:]

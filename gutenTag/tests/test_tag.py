@@ -4,18 +4,15 @@ from ..tagger import Tagger
 
 
 class TestTagger(unittest.TestCase):
-
     @staticmethod
     def test_tag():
-
         text = """The Buddha, the Godhead, resides quite as comfortably in the circuits of a digital
         computer or the gears of a cycle transmission as he does at the top of a mountain
         or in the petals of a flower. To think otherwise is to demean the Buddha...which is
         to demean oneself."""
-
-        assert_equals(Tagger.tag(text),
-                      'buddha, godhead, circuit, digit, comput, gear, cycl, transmiss, mountain, petal, flower, ' +
-                      'buddha, demean, oneself')
+        expected = 'buddha, godhead, circuit, digit, comput, gear, cycl, transmiss, mountain, petal, flower, ' + \
+                   'buddha, demean, oneself'
+        assert_equals(Tagger.tag(text), expected)
 
         #text = """Marketaire.com  Founder - Internet marketing strategies & tactics. SEO, SEM, SMM. Let's do this.
         #Toronto, Ontario, Canada . marketaire.com"""
