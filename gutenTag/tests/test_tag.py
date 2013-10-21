@@ -1,5 +1,6 @@
 import random
 import unittest
+from ..tagger import Tagger
 
 
 class TestTagger(unittest.TestCase):
@@ -11,7 +12,7 @@ class TestTagger(unittest.TestCase):
         or in the petals of a flower. To think otherwise is to demean the Buddha...which is
         to demean oneself."""
 
-        self.assertTrue(tag(text) == 'foo')
+        self.assertTrue(Tagger.tag(text) == 'foo')
 
         #text = """Marketaire.com  Founder - Internet marketing strategies & tactics. SEO, SEM, SMM. Let's do this.
         #Toronto, Ontario, Canada . marketaire.com"""

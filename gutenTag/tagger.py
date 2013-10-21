@@ -1,7 +1,17 @@
+import nltk
+
+
 class Tagger:
-    import nltk
 
     def __init__(self):
+        pass
+
+    @staticmethod
+    def tag(text):
+        """
+        Tag a text.
+        """
+
         sentence_re = r'''(?x)      # set flag to allow verbose regexps
               ([A-Z])(\.[A-Z])+\.?  # abbreviations, e.g. U.S.A.
             | \w+(-\w+)*            # words with optional internal hyphens
@@ -23,13 +33,6 @@ class Tagger:
                 {<NBAR><IN><NBAR>}  # Above, connected with in/of/etc...
         """
         chunker = nltk.RegexpParser(grammar)
-
-
-    @property
-    def tag(text):
-        """
-        Tag a text.
-        """
 
         # Used when tokenizing words
         tokens = nltk.regexp_tokenize(text, sentence_re)
