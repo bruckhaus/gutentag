@@ -1,5 +1,24 @@
 import nltk
 
+# Taken from Su Nam Kim Paper:
+GRAMMAR = r'''
+            NBAR:
+                {<NN.*|JJ>*<NN.*>}  # Nouns and Adjectives, terminated with Nouns
+
+            NP:
+                {<NBAR>}
+                {<NBAR><IN><NBAR>}  # Above, connected with in/of/etc...
+        '''
+
+# Used when tokenizing words
+SENTENCE_REGEX = r'''(?x)      # set flag to allow verbose regexps
+              ([A-Z])(\.[A-Z])+\.?  # abbreviations, e.g. U.S.A.
+            | \w+(-\w+)*            # words with optional internal hyphens
+            | \$?\d+(\.\d+)?%?      # currency and percentages, e.g. $12.40, 82%
+            | \.\.\.                # ellipsis
+            | [][.,;"'?():-_`]      # these are separate tokens
+        '''
+
 
 class Tagger:
     def __init__(self):
@@ -38,40 +57,18 @@ class Tagger:
             yield term
 
     @staticmethod
-    def tag(text):
-        """
-        Tag a text.
-        """
-
-        sentence_re = r'''(?x)      # set flag to allow verbose regexps
-              ([A-Z])(\.[A-Z])+\.?  # abbreviations, e.g. U.S.A.
-            | \w+(-\w+)*            # words with optional internal hyphens
-            | \$?\d+(\.\d+)?%?      # currency and percentages, e.g. $12.40, 82%
-            | \.\.\.                # ellipsis
-            | [][.,;"'?():-_`]      # these are separate tokens
-        '''
-
-        #Taken from Su Nam Kim Paper...
-        grammar = r"""
-            NBAR:
-                {<NN.*|JJ>*<NN.*>}  # Nouns and Adjectives, terminated with Nouns
-
-            NP:
-                {<NBAR>}
-                {<NBAR><IN><NBAR>}  # Above, connected with in/of/etc...
-        """
-        chunker = nltk.RegexpParser(grammar)
-
-        # Used when tokenizing words
-        tokens = nltk.regexp_tokenize(text, sentence_re)
-        pos_tokens = nltk.tag.pos_tag(tokens)
-        tree = chunker.parse(pos_tokens)
-        terms = Tagger.get_terms(tree)
-
+    def word_list(terms):
         result = ''
-
         for term in terms:
             for word in term:
                 result += ', ' + word
-
         return result[2:]
+
+    @staticmethod
+    def tag(text):
+        tokens = nltk.regexp_tokenize(text, SENTENCE_REGEX)
+        pos_tokens = nltk.tag.pos_tag(tokens)
+        chunker = nltk.RegexpParser(GRAMMAR)
+        tree = chunker.parse(pos_tokens)
+        terms = Tagger.get_terms(tree)
+        return Tagger.word_list(terms)
