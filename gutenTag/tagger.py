@@ -6,6 +6,38 @@ class Tagger:
         pass
 
     @staticmethod
+    def leaves(tree):
+        """Finds NP (nounphrase) leaf nodes of a chunk tree."""
+        for subtree in tree.subtrees(filter=lambda t: t.node == 'NP'):
+            yield subtree.leaves()
+
+    @staticmethod
+    def normalise(word):
+        """Normalises words to lowercase and stems and lemmatizes it."""
+        lemmatizer = nltk.WordNetLemmatizer()
+        stemmer = nltk.stem.porter.PorterStemmer()
+        word = word.lower()
+        word = stemmer.stem_word(word)
+        word = lemmatizer.lemmatize(word)
+        return word
+
+    @staticmethod
+    def acceptable_word(word):
+        """Checks conditions for acceptable word: length, stopword."""
+        from nltk.corpus import stopwords
+
+        stopwords = stopwords.words('english')
+        accepted = bool(2 <= len(word) <= 40
+        and word.lower() not in stopwords)
+        return accepted
+
+    @staticmethod
+    def get_terms(tree):
+        for leaf in Tagger.leaves(tree):
+            term = [Tagger.normalise(w) for w, t in leaf if Tagger.acceptable_word(w)]
+            yield term
+
+    @staticmethod
     def tag(text):
         """
         Tag a text.
@@ -18,9 +50,6 @@ class Tagger:
             | \.\.\.                # ellipsis
             | [][.,;"'?():-_`]      # these are separate tokens
         '''
-
-        lemmatizer = nltk.WordNetLemmatizer()
-        stemmer = nltk.stem.porter.PorterStemmer()
 
         #Taken from Su Nam Kim Paper...
         grammar = r"""
@@ -37,38 +66,7 @@ class Tagger:
         tokens = nltk.regexp_tokenize(text, sentence_re)
         pos_tokens = nltk.tag.pos_tag(tokens)
         tree = chunker.parse(pos_tokens)
-
-        from nltk.corpus import stopwords
-
-        def leaves(tree):
-            """Finds NP (nounphrase) leaf nodes of a chunk tree."""
-            for subtree in tree.subtrees(filter=lambda t: t.node == 'NP'):
-                yield subtree.leaves()
-
-
-        def normalise(word):
-            """Normalises words to lowercase and stems and lemmatizes it."""
-            word = word.lower()
-            word = stemmer.stem_word(word)
-            word = lemmatizer.lemmatize(word)
-            return word
-
-
-        def acceptable_word(word):
-            """Checks conditions for acceptable word: length, stopword."""
-            accepted = bool(2 <= len(word) <= 40
-            and word.lower() not in stopwords)
-            return accepted
-
-
-        def get_terms(tree):
-            for leaf in leaves(tree):
-                term = [normalise(w) for w, t in leaf if acceptable_word(w)]
-                yield term
-
-        stopwords = stopwords.words('english')
-
-        terms = get_terms(tree)
+        terms = Tagger.get_terms(tree)
 
         result = ''
 
