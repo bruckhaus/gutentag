@@ -1,6 +1,7 @@
 import unittest
 from nose.tools import *
 from ..tagger import Tagger
+import subprocess
 
 
 class TestTagger(unittest.TestCase):
@@ -69,3 +70,11 @@ class TestTagger(unittest.TestCase):
         text = """I have a large following in Hungary and a small following in the USA."""
         expected = 'hungary, usa'
         assert_equals(Tagger.tag(text), expected)
+
+    @staticmethod
+    def test_tag_file():
+        p = subprocess.Popen(["python", "./gutenTag/tagger.py", "./doc/george_washingtons_journal.txt"],
+                             stdout=subprocess.PIPE)
+        out, err = p.communicate()
+        expected = 'william, findley, david, redick, committee, safety, met, month, parkinson, ferry, camp, resolution, committee, information, state, thing, western, county, pennsylvania, washington, fayette, westd, alligany, order, march, army, oclock, meeting, person, presence, govr, howell, new, jersey, secretary, treasury, colo, hamilton, mr, dandridge, govr, mifflin, acct, business, deputy, resolution, information, disposition, state, matter, county, men, mr, findley, information, part, county, mr, reddick, knowledge, part, county, substance, mr, findleys, communication, viz, people, part, law, public, office, collection, tax, spirit, still, intimating, present, people, office, inspection, pitsburgh, protection, influence, garrison, distiller, enter, still, civil, authority, tone, instance, ignorance, general, want, information, people, thing, conception, excise, law, opposition, law, government, officer, government, situation, life, sometime, go, scene, mr, redicks, information, last, recital, wch, sentiment, situation, opposition, government, whilst, frenzy, height, arm, side, night, morning, occasion, defence, person, property, long, time, riot, distrust, friend, sentiment, whisper, bolder, strength, general, disposition, law, instance, magistrate, people, county, opposition, excise, law, dereliction, part, state, troop, march, purpose, coercion, acct, troop, tale, governmental, men, property, rate, order, country, go, detroit, person, consequence, amnesty, opposition, law, men, property, intention, army, round, ammunition, western, country, mr, findley, resentment, army, treatment, people, disagreeable, consequence, account, march, wish, people, proof, unequivocal, submission, object, hearing, wish, governmt, people, county, sense, duty, mild, lenient, purpose, sober, reflection, fatal, consequence, conduct, commissioner, amongst, time, opposition, law, coercion, wou, dernier, resort, season, year, preparation, pace, proposition, transaction, people, proceeding, government, measure, adoption, expensive, inconvenient, point, view, support, law, object, first, magnitude, part, expense, nothing, unequivocal, proof, absolute, submission, march, army, western, order, government, obedience, law, impunity, proof, justice, example, meaning, interview, oclock, noon, second, meeting, repeti, ti, forenoon, principal, character, western, opposition, proposition, street, next, day, mr, redick, time, disclosure, time, meeting, oclock, afternoon, place, david, bradford, person, former, conversation, meeting, people, deputy, army, point, march, country, fresh, evidence, sincerity, disposition, whatever, objection, gun, consequence, case, possible, care, troop, offering, insult, damage, law, amnesty, person, property, treatment, rest, conduct, army, executioner, offender, military, tribunal, civil, offence, thus, matter\n'
+        assert_equals(out, expected)

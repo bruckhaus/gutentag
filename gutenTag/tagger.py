@@ -1,3 +1,4 @@
+import sys
 import nltk
 
 # Taken from Su Nam Kim Paper:
@@ -68,3 +69,21 @@ class Tagger:
         tree = chunker.parse(pos_tokens)
         terms = Tagger.get_terms(tree)
         return Tagger.word_list(terms)
+
+    @staticmethod
+    def tag_file(file_name):
+        with open(file_name) as input_file:
+            content = input_file.read()
+            return Tagger.tag(content)
+
+
+def main(argv):
+    if len(argv) != 2:
+        sys.stderr.write("Usage: python %s <filename>\n" % (argv[0]))
+        exit(1)
+
+    tags = Tagger.tag_file(argv[1])
+    print tags
+
+if __name__ == "__main__":
+    sys.exit(main(sys.argv))
